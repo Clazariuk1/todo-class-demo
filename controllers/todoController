@@ -31,7 +31,7 @@ exports.create = async function create (req, res) {
     // make a todo
     try {
         const todo = await Todo.create(req.body)
-        res.status(200).json(todo)
+        res.status(201).json(todo)
     } catch (error) {
         res.status(400).json({ msg: error.message })
     }
@@ -39,19 +39,34 @@ exports.create = async function create (req, res) {
 
 exports.update = async function update (req, res) {
     // update a todo that exists
+    /*
+
+    in the db {
+        title: 'Do my assignments'
+    }
+
+    req.body {
+        title: 'Do my homework'
+{ new: true } determines to send the MODIFIED document on an update request, rather than the original.
+    }
+    */
     try {
-
+        const updatedTodo = await await Todo.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+        res.status(200).json(updatedTodo)
     } catch (error) {
-
+        res.status(400).json({ msg: error.message })
     }
 }
 
 exports.destroy = async function destroy (req, res) {
     // delete an existing todo
     try {
+        const deletedTodo = await findOneAndDelete({ _id: req.params.id })
+        send.status(204)
+        // alternative to above: res.status(200).json({ msg: `The todo with the id of ${deletedTodo._id} was deleted from the MongoDB database; no further action necessary.` }) the 204 will ignore any error message you intend to sent. the message is content, making 204 incorrect.
 
     } catch (error) {
-
+        res.status(400).json({ msg: error.message })
     }
 }
 
